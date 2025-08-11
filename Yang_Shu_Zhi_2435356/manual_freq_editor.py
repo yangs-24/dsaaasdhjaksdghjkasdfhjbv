@@ -6,8 +6,11 @@
 from trie import Trie
 
 class ManualFrequencyEditor:
-    def __init__(self):
-        self.trie = Trie()
+    def __init__(self, trie: Trie):
+        """
+        Initializes the ManualFrequencyEditor with a shared Trie instance.
+        """
+        self.trie = trie
 
     def edit_frequency(self, word, new_freq):
         """
@@ -22,7 +25,7 @@ class ManualFrequencyEditor:
 
         for char in word:
             if char not in node.children:
-                print(f"'{word}' not found in trie.")
+                print(f"Error: '{word}' not found in trie.")
                 return False
             node = node.children[char]
 
@@ -32,36 +35,29 @@ class ManualFrequencyEditor:
             print(f"Frequency for '{word}' updated from {old_freq} to {new_freq}.")
             return True
         else:
-            print(f"'{word}' is a prefix, not a complete word.")
+            print(f"Error: '{word}' is a prefix, but not a complete word in the trie.")
             return False
 
-    def manual_freq_menu(self):
+    def display_word_frequencies(self):
         """
-        Display the menu for manual frequency editing.
+        Displays all words in the trie with their current frequencies.
         """
-        print("\nManual Frequency Editor Menu:")
-        print("1. Edit Word Frequency")
-        print("2. Exit")
-
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            word = input("Enter the word to edit frequency: ")
-            new_freq = input("Enter the new frequency: ")
-            try:
-                new_freq = int(new_freq)
-                if self.edit_frequency(word, new_freq):
-                    print(f"Frequency for '{word}' successfully updated.")
-            except ValueError:
-                print("Invalid frequency value. Please enter a number.")
-        elif choice == '2':
+        all_words = self.trie.to_list()
+        if not all_words:
+            print("The trie is empty. No frequencies to display.")
             return
-        else:
-            print("Invalid choice. Please try again.")
+            
+        print("\n--- Current Word Frequencies ---")
+        # Sort words alphabetically for consistent display
+        all_words.sort(key=lambda item: item[0])
+        for word, freq in all_words:
+            print(f"- {word}: {freq}")
+        print("--------------------------------")
 
 
     def manual_freq_menu(self):
         """
-        Display the menu for manual frequency editing.
+        Displays the menu for manual frequency editing.
         """
         while True:
             try:
@@ -85,11 +81,11 @@ class ManualFrequencyEditor:
                     try:
                         new_freq = int(freq_input)
                         if new_freq < 0:
-                            print("Frequency must be non-negative.")
+                            print("Frequency must be a non-negative number.")
                             continue
                         self.edit_frequency(word, new_freq)
                     except ValueError:
-                        print("Invalid frequency value. Please enter a number.")
+                        print("Invalid frequency. Please enter an integer.")
                         
                 elif choice == '2':
                     self.display_word_frequencies()
@@ -105,4 +101,4 @@ class ManualFrequencyEditor:
                 print("\nReturning to Main Menu...")
                 break
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"An error occurred: {e}")

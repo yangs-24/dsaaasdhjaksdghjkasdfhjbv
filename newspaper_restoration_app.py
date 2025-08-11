@@ -13,16 +13,16 @@ class NewspaperRestorationApp:
     def __init__(self):
         self.__trie = Trie()
         self.running = True
-        self.conf_restorer = ConfidenceRestorer()
-        self.freq_editor = ManualFrequencyEditor()
+        self.conf_restorer = ConfidenceRestorer(self.__trie)
+        self.freq_editor = ManualFrequencyEditor(self.__trie)
 
     def display_main_menu(self):
         print("\n" + "*"*65)
         print("* ST1507 DSAA: Predictive Text Editor (using tries)             *")
         print("*"+"-"*63 + "*")
         print("*" + " "*63 + "*")
-        print("*  - Done by: Yang Shu Zhi (2435356) & Ashley Yong (2435781)    *")
-        print("*  - Class: DAAA/2A/03                                          *")
+        print("* - Done by: Yang Shu Zhi (2435356) & Ashley Yong (2435781)    *")
+        print("* - Class: DAAA/2A/03                                          *")
         print("*" + " "*63 + "*")
         print("*"*65)
         print("\n\n")
@@ -123,8 +123,6 @@ class NewspaperRestorationApp:
                         except IOError as e:
                             print(f"Error: Could not write to file '{filename}'.")
                             print(f"Reason: {e}")
-                    else:
-                        print("Error: Invalid filename.")
                 
                 elif command == "!":
                     self.construct_edit_trie_menu()
@@ -189,12 +187,39 @@ class NewspaperRestorationApp:
                         print(f"Best match: <{best[0]}>" if best else "No match found.")
             
                 elif command == '&':
-                    filename = input("Enter defect text file: ")
-                    restore_all_matches_from_file(self.__trie, filename)
+                    filename = input("Enter defect text file: ").strip()
+                    if not os.path.exists(filename):
+                        print(f"Error: Input file '{filename}' not found.")
+                        continue
+                    
+                    save_choice = input("Save output to a new file? (y/n): ").lower().strip()
+                    if save_choice == 'y':
+                        output_filename = input("Enter output filename: ").strip()
+                        if output_filename:
+                            restore_all_matches_from_file(self.__trie, filename, output_filename)
+                        else:
+                            print("Invalid output filename. Restored text will be printed to the console.")
+                            restore_all_matches_from_file(self.__trie, filename)
+                    else:
+                        restore_all_matches_from_file(self.__trie, filename)
+
 
                 elif command == '@':
-                    filename = input("Enter defect text file: ")
-                    restore_best_matches_from_file(self.__trie, filename)
+                    filename = input("Enter defect text file: ").strip()
+                    if not os.path.exists(filename):
+                        print(f"Error: Input file '{filename}' not found.")
+                        continue
+                    
+                    save_choice = input("Save output to a new file? (y/n): ").lower().strip()
+                    if save_choice == 'y':
+                        output_filename = input("Enter output filename: ").strip()
+                        if output_filename:
+                            restore_best_matches_from_file(self.__trie, filename, output_filename)
+                        else:
+                            print("Invalid output filename. Restored text will be printed to the console.")
+                            restore_best_matches_from_file(self.__trie, filename)
+                    else:
+                        restore_best_matches_from_file(self.__trie, filename)
 
                 elif command == '#':
                     for line in self.__trie.display():
@@ -224,10 +249,10 @@ class NewspaperRestorationApp:
                 elif choice == '2':
                     self.predict_restore_text_menu()
                 elif choice == '3':
-                    self.conf_restorer.trie = self.trie
+                    self.conf_restorer.trie = self.__trie
                     self.conf_restorer.restore_confidence_menu()
                 elif choice == '4':
-                    self.conf_restorer.trie = self.trie
+                    self.conf_restorer.trie = self.__trie
                     self.freq_editor.manual_freq_menu()
                 elif choice == '5':
                     print("Additional Feature 3 - Context Analyzer")

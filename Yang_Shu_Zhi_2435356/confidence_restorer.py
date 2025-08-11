@@ -6,42 +6,42 @@
 from trie import Trie
 
 class ConfidenceRestorer:
-    def __init__(self):
-        self.trie = Trie()
+    def __init__(self, trie: Trie):
+        """
+        Initializes the ConfidenceRestorer with a shared Trie instance.
+        """
+        self.trie = trie
     
     def restore_with_confidence(self, word_with_wildcards):
         """
-        Restore a wildcard word using matches from the trie and show confidence scores.
+        Restores a wildcard word using matches from the trie and shows confidence scores.
         """
-        matches = self.trie.find_all_matches(word_with_wildcards)
+        # Use the wildcard_search method which returns (word, frequency) tuples
+        matches = self.trie.wildcard_search(word_with_wildcards.lower())
+        
         if not matches:
             print(f"No matches found for '{word_with_wildcards}'.")
             return
 
-        # Get word frequencies from the trie
-        total_frequency = 0
-        word_frequencies = []
+        # Calculate the total frequency from all matches found
+        total_frequency = sum(freq for word, freq in matches)
 
-        for word in matches:
-            node = self.trie.root
-            for char in word:
-                node = node.children[char]
+        if total_frequency == 0:
+            print(f"Matches found for '{word_with_wildcards}', but they have no frequency data.")
+            print("Possible Matches:", [word for word, freq in matches])
+            return
 
-            if node and node.is_terminal:
-                word_frequencies.append((word, node.frequency))
-                total_frequency += node.frequency
-
-        # Display the results
-        print(f"Restoring: {word_with_wildcards}")
+        # Display the results with confidence scores
+        print(f"\nRestoring: {word_with_wildcards}")
         print("Possible Matches with Confidence Scores:")
-        for word, freq in word_frequencies:
+        for word, freq in matches:
             confidence = (freq / total_frequency) * 100
             print(f" - {word} ({confidence:.2f}%)")
 
 
     def restore_confidence_menu(self):
         """
-        Display the menu for restoring words with confidence scores.
+        Displays the menu for restoring words with confidence scores.
         """
         while True:
             try:
@@ -65,10 +65,10 @@ class ConfidenceRestorer:
                     break
                     
                 else:
-                    print("Invalid choice. Please enter a number between 1 and 4.")
+                    print("Invalid choice. Please enter either 1 or 2.")
                     
             except KeyboardInterrupt:
                 print("\nReturning to Main Menu...")
                 break
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"An error occurred: {e}")
