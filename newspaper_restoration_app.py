@@ -39,7 +39,7 @@ class NewspaperRestorationApp:
         print("    4. Manual Frequency Editor (Yang Shu Zhi)")
         print("    "+"-"*52)
         print("    5. Context Analyzer (Ashley Yong Lok Xi)")
-        print("    6. Parse Tree Grammar Validation (Ashley Yong Lok Xi)")
+        print("    6. Trie visualization (Ashley Yong Lok Xi)")
         print("    "+"-"*52)
         print("    7. Exit")
         
@@ -263,7 +263,7 @@ class NewspaperRestorationApp:
                     print("Additional Feature 3 - Context Analyzer")
                     integrate_context_analyzer()
                 elif choice == '6':
-                    print("Additional Feature 4 - Parse Tree Grammar Validation")
+                    print("Additional Feature 4 - Trie Visualization")
                     integrate_trie_visualizer()
                 elif choice == '7':
                     print("Thank you for using the Newspaper Restoration Application!")
