@@ -13,6 +13,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
+        self.size = 0
 
     def add(self, word, freq=1):
         node = self.root
@@ -20,6 +21,8 @@ class Trie:
             if char not in node.children:
                 node.children[char] = TrieNode()
             node = node.children[char]
+        if not node.is_terminal:
+            self.size += 1  # only increment if it's a new word
         node.is_terminal = True
         node.frequency += freq
 
@@ -179,7 +182,7 @@ class Trie:
         File format: word,frequency (one per line)
         """
         try:
-            words = self.get_all_words()
+            words = self.to_list()
             with open(filename, 'w', encoding='utf-8') as file:
                 for word, frequency in words:
                     file.write(f"{word},{frequency}\n")
@@ -189,34 +192,40 @@ class Trie:
             
     def write_trie_to_file(self, filename):
         """
-        Write the trie structure to a file in a readable format.
+        Write the trie structure to a file in a readable hierarchical format,
+        showing words with frequencies and the tree branches.
         """
         try:
             with open(filename, 'w', encoding='utf-8') as file:
                 if self.size == 0:
                     file.write("[]\n")
                     return
-                    
-                def _write_node(node, prefix="", is_last=True):
+
+                def _write_node(node, current_word="", prefix="", is_last=True):
+                    # If this node marks a word, write the full word and frequency
                     if node.is_terminal:
-                        file.write(f"{prefix}{'└── ' if is_last else '├── '}{node.word}* ({node.frequency})\n")
-                    
+                        file.write(f"{prefix}{'└── ' if is_last else '├── '}{current_word}* ({node.frequency})\n")
+
                     children = list(node.children.items())
                     for i, (char, child_node) in enumerate(children):
-                        is_last_child = i == len(children) - 1
+                        is_last_child = (i == len(children) - 1)
+                        # For child prefix, if current node is last sibling, add spaces, else add vertical line
                         next_prefix = prefix + ("    " if is_last else "│   ")
-                        
-                        if child_node.is_terminal:
-                            _write_node(child_node, next_prefix, is_last_child)
-                        else:
+                        # Write the character branch
+                        # Only write char if child node is not terminal (otherwise full word is written)
+                        if not child_node.is_terminal:
                             file.write(f"{next_prefix}{'└── ' if is_last_child else '├── '}{char}\n")
-                            _write_node(child_node, next_prefix + ("    " if is_last_child else "│   "), True)
-                            
+                        # Recursively write child node, accumulating the word
+                        _write_node(child_node, current_word + char, next_prefix, is_last_child)
+
                 file.write("Trie Structure:\n")
                 _write_node(self.root)
                 file.write(f"\nTotal words: {self.size}\n")
+
         except Exception as e:
             print(f"Error writing trie to file: {e}")
+
+
 
 
 def match_case_pattern(original, matched):

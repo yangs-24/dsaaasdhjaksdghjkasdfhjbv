@@ -103,7 +103,7 @@ class NewspaperRestorationApp:
                 elif command == '@':
                     filename = input("Enter filename to write trie: ").strip()
                     if filename:
-                        self.__trie.write_to_file(filename)
+                        self.__trie.write_trie_to_file(filename)
                         print(f"Trie written to file '{filename}'.")
                     else:
                         print("Invalid filename")
@@ -123,7 +123,7 @@ class NewspaperRestorationApp:
                     filename = input("Enter filename to write keywords to: ").strip()
                     if filename:
                         try:
-                            self.trie.write_keywords_to_file(filename) 
+                            self.__trie.write_keywords_to_file(filename)
                             print(f"Keywords successfully written to '{filename}'.")
                         except IOError as e:
                             print(f"Error: Could not write to file '{filename}'.")

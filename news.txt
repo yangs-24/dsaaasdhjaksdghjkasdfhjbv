@@ -1,0 +1,12 @@
+Trie Structure:
+    └── n
+        └── e
+            └── w
+                └── news* (1)
+                    └── p
+                        └── a
+                            └── p
+                                └── e
+                                    └── newspaper* (1)
+
+Total words: 2
