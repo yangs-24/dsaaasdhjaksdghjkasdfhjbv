@@ -1,3 +1,8 @@
+# text_processor.py
+# ST1507 CA2 - Text Processing for Newspaper Restoration
+# Shu Zhi and Ashley
+# DAAA/2A/03
+
 from trie import match_case_pattern
 
 def restore_all_matches_from_file(trie, filename, output_filename=None):

@@ -1,3 +1,8 @@
+# newspaper_restoration_app.py
+# ST1507 CA2 - Newspaper Restoration App
+# Shu Zhi and Ashley
+# DAAA/2A/03
+
 from trie import Trie
 from text_restorer import restore_all_matches_from_file, restore_best_matches_from_file
 

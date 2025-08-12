@@ -1,3 +1,8 @@
+# trie.py
+# Prefix Trie Implementation for ST1507 CA2
+# Shu Zhi and Ashley
+# DAAA/2A/03
+
 class TrieNode:
     def __init__(self):
         self.children = {}

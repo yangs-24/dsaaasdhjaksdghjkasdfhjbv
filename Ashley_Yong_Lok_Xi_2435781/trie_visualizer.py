@@ -1,3 +1,9 @@
+# context_analyzer.py
+# ST1507 CA2 - Trie Visualizer
+# Additional Feature for Newspaper Restoration App
+# Ashley Yong Lok Xi
+# DAAA/2A/03
+
 import matplotlib.pyplot as plt
 import networkx as nx
 import re
